@@ -30,10 +30,14 @@ def copyCommits():
         # Récupération du message du commit d'origine
         commit_info = subprocess.check_output(["git", "log", "-n", "1", "--pretty=format:%s"], cwd=repo_path).decode().strip()
 
+        #Récupération de la date du commit d'origine
+        commit_date = subprocess.check_output(["git", "log", "-n", "1", "--pretty=format:%ci"], cwd=repo_path).decode().strip()
+
         subprocess.run(["git", "branch", "--unset-upstream", "origin/master"], cwd=dest_path)
 
-        # Commit des modifications dans le dépôt de destination avec le message du commit d'origine
-        subprocess.run(["git", "commit", "-m", commit_info], cwd=dest_path)
+        # Commit des modifications dans le dépôt de destination avec le message du commit d'origine et la date du commit d'origine
+        # subprocess.run(["git", "commit", "-m", commit_info], cwd=dest_path)
+        subprocess.run(["git", "commit", "--date", commit_date, "-m", commit_info], cwd=dest_path)
 
         subprocess.run(["git", "push", "--set-upstream", "origin", "main"], cwd=dest_path)
 
